@@ -8,7 +8,7 @@ validator fractional_sale {
     when context.purpose is {
       Spend(output_reference) ->
         when redeemer is {
-          // Buyer can purchase a UTxO
+          // Buyer can purchase a bundle from the UTxO
           Purchase { buy_amt } ->
             validators.purchase_validation(
               datum,
@@ -31,7 +31,7 @@ validator fractional_sale {
               output_reference,
             )
         }
-      // anything other than spend fails
+      // Anything else fails
       _ -> False
     }
   }
