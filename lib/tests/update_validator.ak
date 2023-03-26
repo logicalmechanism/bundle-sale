@@ -5,21 +5,26 @@ use aiken/transaction.{
 }
 use aiken/transaction/credential.{Address}
 use aiken/transaction/value
-use fractional_sale/address
 use fractional_sale/datums.{Datum, OwnerInfo, TokenInfo}
 use fractional_sale/validators
 
 pub fn datum_a() -> Datum {
-  let owner: OwnerInfo = OwnerInfo { pkh: #"", sc: #"" }
-  let bundle: TokenInfo = TokenInfo { pid: #"", tkn: #"", amt: 10 }
-  let cost: TokenInfo = TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
+  let owner: OwnerInfo =
+    OwnerInfo { pkh: #"", sc: #"" }
+  let bundle: TokenInfo =
+    TokenInfo { pid: #"", tkn: #"", amt: 10 }
+  let cost: TokenInfo =
+    TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
   Datum { owner, bundle, cost }
 }
 
 pub fn datum_b() -> Datum {
-  let owner: OwnerInfo = OwnerInfo { pkh: #"0102", sc: #"" }
-  let bundle: TokenInfo = TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
-  let cost: TokenInfo = TokenInfo { pid: #"", tkn: #"", amt: 10 }
+  let owner: OwnerInfo =
+    OwnerInfo { pkh: #"0102", sc: #"" }
+  let bundle: TokenInfo =
+    TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
+  let cost: TokenInfo =
+    TokenInfo { pid: #"", tkn: #"", amt: 10 }
   Datum { owner, bundle, cost }
 }
 
@@ -103,8 +108,12 @@ pub fn tx_valid(
 }
 
 test good_update_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
+  let script_addr =
+    credential.from_verification_key(#"0102")
+      |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, addr, #""),
@@ -113,8 +122,12 @@ test good_update_tx() {
 }
 
 test bad_signer_update_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
+  let script_addr =
+    credential.from_verification_key(#"0102")
+      |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, addr, #"acab"),
@@ -124,8 +137,8 @@ test bad_signer_update_tx() {
 
 // no way to test for errors yet
 // test no_cont_update_tx() {
-//   let script_addr = address.create_address(#"0102", #"")
-//   let addr = address.create_address(#"", #"")
+//   let script_addr = credential.from_verification_key(#"0102") |> credential.with_delegation_key(#"")
+//   let addr = credential.from_verification_key(#"") |> credential.with_delegation_key(#"")
 //   validators.update_validation(
 //     datum_a(),
 //     tx_valid(script_addr, addr, addr, addr, #""),
@@ -134,8 +147,12 @@ test bad_signer_update_tx() {
 // }
 
 test two_inputs_update_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
+  let script_addr =
+    credential.from_verification_key(#"0102")
+      |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, script_addr, script_addr, addr, #""),
@@ -144,8 +161,12 @@ test two_inputs_update_tx() {
 }
 
 test two_ouputs_update_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
+  let script_addr =
+    credential.from_verification_key(#"0102")
+      |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, script_addr, #""),
@@ -154,8 +175,12 @@ test two_ouputs_update_tx() {
 }
 
 test bad_cont_datum_update_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
+  let script_addr =
+    credential.from_verification_key(#"0102")
+      |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, script_addr, #""),
