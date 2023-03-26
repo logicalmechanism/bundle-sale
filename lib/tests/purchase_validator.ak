@@ -5,29 +5,37 @@ use aiken/transaction.{
 }
 use aiken/transaction/credential.{Address}
 use aiken/transaction/value
-use fractional_sale/address
 use fractional_sale/datums.{Datum, OwnerInfo, TokenInfo}
 use fractional_sale/redeemers.{BuyAmount}
 use fractional_sale/validators
 
 pub fn datum_a() -> Datum {
-  let owner: OwnerInfo = OwnerInfo { pkh: #"", sc: #"" }
-  let bundle: TokenInfo = TokenInfo { pid: #"", tkn: #"", amt: 10 }
-  let cost: TokenInfo = TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
+  let owner: OwnerInfo =
+    OwnerInfo { pkh: #"", sc: #"" }
+  let bundle: TokenInfo =
+    TokenInfo { pid: #"", tkn: #"", amt: 10 }
+  let cost: TokenInfo =
+    TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
   Datum { owner, bundle, cost }
 }
 
 pub fn datum_a_cont() -> Datum {
-  let owner: OwnerInfo = OwnerInfo { pkh: #"", sc: #"" }
-  let bundle: TokenInfo = TokenInfo { pid: #"", tkn: #"", amt: 10 }
-  let cost: TokenInfo = TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
+  let owner: OwnerInfo =
+    OwnerInfo { pkh: #"", sc: #"" }
+  let bundle: TokenInfo =
+    TokenInfo { pid: #"", tkn: #"", amt: 10 }
+  let cost: TokenInfo =
+    TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
   Datum { owner, bundle, cost }
 }
 
 pub fn datum_b() -> Datum {
-  let owner: OwnerInfo = OwnerInfo { pkh: #"0102", sc: #"" }
-  let bundle: TokenInfo = TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
-  let cost: TokenInfo = TokenInfo { pid: #"", tkn: #"", amt: 10 }
+  let owner: OwnerInfo =
+    OwnerInfo { pkh: #"0102", sc: #"" }
+  let bundle: TokenInfo =
+    TokenInfo { pid: #"acab", tkn: #"beef", amt: 10 }
+  let cost: TokenInfo =
+    TokenInfo { pid: #"", tkn: #"", amt: 10 }
   Datum { owner, bundle, cost }
 }
 
@@ -125,10 +133,17 @@ pub fn tx_valid(
 }
 
 test good_part_buy_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
-  let buy_addr = address.create_address(#"acab", #"")
-  let buy_amt = BuyAmount(4)
+  let script_addr =
+    credential.from_verification_key(#"0102")
+  // |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+  // |> credential.with_delegation_key(#"")
+  let buy_addr =
+    credential.from_verification_key(#"acab")
+  // |> credential.with_delegation_key(#"")
+  let buy_amt =
+    BuyAmount(4)
   validators.purchase_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, buy_addr, script_addr, #"acab"),
@@ -138,10 +153,17 @@ test good_part_buy_tx() {
 }
 
 test not_enough_part_buy_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
-  let buy_addr = address.create_address(#"acab", #"")
-  let buy_amt = BuyAmount(15)
+  let script_addr =
+    credential.from_verification_key(#"0102")
+  // |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+  // |> credential.with_delegation_key(#"")
+  let buy_addr =
+    credential.from_verification_key(#"acab")
+  // |> credential.with_delegation_key(#"")
+  let buy_amt =
+    BuyAmount(15)
   validators.purchase_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, buy_addr, script_addr, #"acab"),
@@ -151,10 +173,17 @@ test not_enough_part_buy_tx() {
 }
 
 test two_outputs_part_buy_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
-  let buy_addr = address.create_address(#"acab", #"")
-  let buy_amt = BuyAmount(5)
+  let script_addr =
+    credential.from_verification_key(#"0102")
+  // |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+  // |> credential.with_delegation_key(#"")
+  let buy_addr =
+    credential.from_verification_key(#"acab")
+  // |> credential.with_delegation_key(#"")
+  let buy_amt =
+    BuyAmount(5)
   validators.purchase_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, buy_addr, script_addr, #"acab"),
@@ -164,10 +193,17 @@ test two_outputs_part_buy_tx() {
 }
 
 test two_inputs_part_buy_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
-  let buy_addr = address.create_address(#"acab", #"")
-  let buy_amt = BuyAmount(5)
+  let script_addr =
+    credential.from_verification_key(#"0102")
+  // |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+  // |> credential.with_delegation_key(#"")
+  let buy_addr =
+    credential.from_verification_key(#"acab")
+  // |> credential.with_delegation_key(#"")
+  let buy_amt =
+    BuyAmount(5)
   validators.purchase_validation(
     datum_a(),
     tx_valid(script_addr, script_addr, addr, buy_addr, script_addr, #"acab"),
@@ -178,14 +214,13 @@ test two_inputs_part_buy_tx() {
 
 // no way to test for errors yet
 // test no_cont_tx_part_buy_tx() {
-//   let script_addr = address.create_address(#"0102", #"")
+//   let script_addr = credential.from_verification_key(#"0102")
+// |> credential.with_delegation_key(#"")
 //   let addr =
-//     address.create_address(#"", #"")
-//   let buy_addr =
-//     address.create_address(
-//       #"acab",
-//       #"",
-//     )
+//     credential.from_verification_key(#"")
+// |> credential.with_delegation_key(#"")
+//   let buy_addr = credential.from_verification_key(#"acab")
+// |> credential.with_delegation_key(#"")
 //   let buy_amt = BuyAmount(5)
 //   validators.purchase_validation(
 //     datum_a(),
@@ -196,10 +231,17 @@ test two_inputs_part_buy_tx() {
 // }
 
 test no_pay_receive_part_buy_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
-  let buy_addr = address.create_address(#"acab", #"")
-  let buy_amt = BuyAmount(5)
+  let script_addr =
+    credential.from_verification_key(#"0102")
+  // |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+  // |> credential.with_delegation_key(#"")
+  let buy_addr =
+    credential.from_verification_key(#"acab")
+  // |> credential.with_delegation_key(#"")
+  let buy_amt =
+    BuyAmount(5)
   validators.purchase_validation(
     datum_a(),
     tx_valid(script_addr, addr, buy_addr, buy_addr, script_addr, #"acab"),
@@ -209,10 +251,17 @@ test no_pay_receive_part_buy_tx() {
 }
 
 test bad_signer_part_buy_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
-  let buy_addr = address.create_address(#"acab", #"")
-  let buy_amt = BuyAmount(5)
+  let script_addr =
+    credential.from_verification_key(#"0102")
+  // |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+  // |> credential.with_delegation_key(#"")
+  let buy_addr =
+    credential.from_verification_key(#"acab")
+  // |> credential.with_delegation_key(#"")
+  let buy_amt =
+    BuyAmount(5)
   validators.purchase_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, buy_addr, script_addr, #""),
@@ -222,9 +271,14 @@ test bad_signer_part_buy_tx() {
 }
 
 test no_buy_receive_part_buy_tx() {
-  let script_addr = address.create_address(#"0102", #"")
-  let addr = address.create_address(#"", #"")
-  let buy_amt = BuyAmount(5)
+  let script_addr =
+    credential.from_verification_key(#"0102")
+  // |> credential.with_delegation_key(#"")
+  let addr =
+    credential.from_verification_key(#"")
+  // |> credential.with_delegation_key(#"")
+  let buy_amt =
+    BuyAmount(5)
   validators.purchase_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, addr, script_addr, #"acab"),

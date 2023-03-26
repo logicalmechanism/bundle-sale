@@ -19,7 +19,7 @@ test no_script_inputs() {
     SampleData { a: 1, b: #"01" }
   let addr =
     credential.from_verification_key(key_hash)
-      |> credential.with_delegation_key(#"")
+  // |> credential.with_delegation_key(#"")
   let inputs =
     [
       Input {
@@ -35,7 +35,12 @@ test no_script_inputs() {
         },
       },
     ]
-  address.count_script_inputs(inputs, address.create_address(#"", #""), 0) == 0
+  address.count_script_inputs(
+    inputs,
+    credential.from_verification_key(#""),
+    //|> credential.with_delegation_key(#""),
+    0,
+  ) == 0
 }
 
 test single_script_input() {
@@ -45,7 +50,7 @@ test single_script_input() {
     SampleData { a: 1, b: #"01" }
   let addr =
     credential.from_verification_key(key_hash)
-      |> credential.with_delegation_key(#"")
+  // |> credential.with_delegation_key(#"")
   let inputs =
     [
       Input {
@@ -71,7 +76,7 @@ test no_script_output() {
     SampleData { a: 1, b: #"01" }
   let addr =
     credential.from_verification_key(key_hash)
-      |> credential.with_delegation_key(#"")
+  // |> credential.with_delegation_key(#"")
   let outputs =
     [
       Output {
@@ -81,7 +86,12 @@ test no_script_output() {
         reference_script: None,
       },
     ]
-  address.count_script_outputs(outputs, address.create_address(#"", #""), 0) == 0
+  address.count_script_outputs(
+    outputs,
+    credential.from_verification_key(#""),
+    // |> credential.with_delegation_key(#""),
+    0,
+  ) == 0
 }
 
 test single_script_output() {
@@ -91,7 +101,7 @@ test single_script_output() {
     SampleData { a: 1, b: #"01" }
   let addr =
     credential.from_verification_key(key_hash)
-      |> credential.with_delegation_key(#"")
+  // |> credential.with_delegation_key(#"")
   let outputs =
     [
       Output {
@@ -111,7 +121,7 @@ test single_input_address() {
     SampleData { a: 1, b: #"01" }
   let addr =
     credential.from_verification_key(key_hash)
-      |> credential.with_delegation_key(#"")
+  // |> credential.with_delegation_key(#"")
   let inputs =
     [
       Input {
@@ -139,7 +149,7 @@ test single_cont_output() {
     SampleData { a: 1, b: #"01" }
   let addr =
     credential.from_verification_key(key_hash)
-      |> credential.with_delegation_key(#"")
+  // |> credential.with_delegation_key(#"")
   let outputs =
     [
       Output {
@@ -159,7 +169,7 @@ test single_exact_payout() {
     SampleData { a: 1, b: #"01" }
   let addr =
     credential.from_verification_key(key_hash)
-      |> credential.with_delegation_key(#"")
+  // |> credential.with_delegation_key(#"")
   let outputs =
     [
       Output {
