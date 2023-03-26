@@ -104,10 +104,10 @@ pub fn tx_valid(
 test good_remove_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.remove_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, #""),
@@ -118,10 +118,10 @@ test good_remove_tx() {
 test wrong_signer_remove_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.remove_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, #"acab"),
@@ -132,10 +132,10 @@ test wrong_signer_remove_tx() {
 test double_script_remove_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.remove_validation(
     datum_a(),
     tx_valid(script_addr, script_addr, addr, #""),
@@ -146,10 +146,10 @@ test double_script_remove_tx() {
 test wrong_payout_remove_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"acab")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.remove_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, #""),
@@ -160,10 +160,10 @@ test wrong_payout_remove_tx() {
 test cont_script_remove_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.remove_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, #""),

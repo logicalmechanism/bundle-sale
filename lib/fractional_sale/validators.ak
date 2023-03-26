@@ -22,7 +22,7 @@ pub fn purchase_validation(
     validating_input.output.address
   let seller_addr =
     credential.from_verification_key(datum.owner.pkh)
-  // |> credential.with_delegation_key(datum.owner.sc)
+      |> credential.with_delegation_key(datum.owner.sc)
   let cost_value =
     value.from_asset(
       datum.cost.pid,
@@ -99,7 +99,7 @@ pub fn remove_validation(
     validating_input.output.address
   let seller_addr =
     credential.from_verification_key(datum.owner.pkh)
-  // |> credential.with_delegation_key(datum.owner.sc)
+      |> credential.with_delegation_key(datum.owner.sc)
   list.and(
     [
       // owner must sign it

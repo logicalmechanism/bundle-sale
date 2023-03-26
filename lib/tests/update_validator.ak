@@ -110,10 +110,10 @@ pub fn tx_valid(
 test good_update_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, addr, #""),
@@ -124,10 +124,10 @@ test good_update_tx() {
 test bad_signer_update_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, addr, #"acab"),
@@ -149,10 +149,10 @@ test bad_signer_update_tx() {
 test two_inputs_update_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, script_addr, script_addr, addr, #""),
@@ -163,10 +163,10 @@ test two_inputs_update_tx() {
 test two_ouputs_update_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, script_addr, script_addr, #""),
@@ -177,10 +177,10 @@ test two_ouputs_update_tx() {
 test bad_cont_datum_update_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   validators.update_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, script_addr, #""),

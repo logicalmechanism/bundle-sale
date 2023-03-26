@@ -135,13 +135,13 @@ pub fn tx_valid(
 test good_part_buy_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_addr =
     credential.from_verification_key(#"acab")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_amt =
     BuyAmount(4)
   validators.purchase_validation(
@@ -155,13 +155,13 @@ test good_part_buy_tx() {
 test not_enough_part_buy_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_addr =
     credential.from_verification_key(#"acab")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_amt =
     BuyAmount(15)
   validators.purchase_validation(
@@ -175,13 +175,13 @@ test not_enough_part_buy_tx() {
 test two_outputs_part_buy_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_addr =
     credential.from_verification_key(#"acab")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_amt =
     BuyAmount(5)
   validators.purchase_validation(
@@ -195,13 +195,13 @@ test two_outputs_part_buy_tx() {
 test two_inputs_part_buy_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_addr =
     credential.from_verification_key(#"acab")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_amt =
     BuyAmount(5)
   validators.purchase_validation(
@@ -233,13 +233,13 @@ test two_inputs_part_buy_tx() {
 test no_pay_receive_part_buy_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_addr =
     credential.from_verification_key(#"acab")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_amt =
     BuyAmount(5)
   validators.purchase_validation(
@@ -253,13 +253,13 @@ test no_pay_receive_part_buy_tx() {
 test bad_signer_part_buy_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_addr =
     credential.from_verification_key(#"acab")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_amt =
     BuyAmount(5)
   validators.purchase_validation(
@@ -273,10 +273,10 @@ test bad_signer_part_buy_tx() {
 test no_buy_receive_part_buy_tx() {
   let script_addr =
     credential.from_verification_key(#"0102")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-  // |> credential.with_delegation_key(#"")
+      |> credential.with_delegation_key(#"")
   let buy_amt =
     BuyAmount(5)
   validators.purchase_validation(
