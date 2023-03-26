@@ -168,14 +168,27 @@ test single_exact_payout() {
   let addr =
     credential.from_verification_key(key_hash)
       |> credential.with_delegation_key(#"")
+  let out_value =
+    value.from_asset(#"", #"", 10)
   let outputs =
     [
       Output {
         address: addr,
-        value: value.zero(),
+        value: out_value,
         datum: InlineDatum(sample_datum),
         reference_script: None,
       },
     ]
-  address.find_exact_payout(addr, value.zero(), outputs) == True
+  address.find_exact_payout(addr, out_value, outputs) == True
+}
+
+test addr_equality() {
+  let key_hash =
+    #"010203040506"
+  let addr1 =
+    credential.from_verification_key(key_hash)
+      |> credential.with_delegation_key(#"")
+  let addr2 =
+    credential.from_verification_key(key_hash)
+  addr1 != addr2
 }

@@ -138,7 +138,6 @@ test good_part_buy_tx() {
       |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-      |> credential.with_delegation_key(#"")
   let buy_addr =
     credential.from_verification_key(#"acab")
       |> credential.with_delegation_key(#"")

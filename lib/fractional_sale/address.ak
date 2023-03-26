@@ -14,7 +14,8 @@ pub fn count_script_inputs(
       } else {
         count_script_inputs(rest, script_addr, counter)
       }
-    [] -> counter
+    [] ->
+      counter
   }
 }
 
@@ -31,14 +32,17 @@ pub fn count_script_outputs(
       } else {
         count_script_outputs(rest, script_addr, counter)
       }
-    [] -> counter
+    [] ->
+      counter
   }
 }
 
 pub fn find_input_address(possible_input: Option<Input>) -> Address {
   when possible_input is {
-    Some(possible_input) -> possible_input.output.address
-    None -> error @"can't find script address"
+    Some(possible_input) ->
+      possible_input.output.address
+    None ->
+      error @"can't find script address"
   }
 }
 
@@ -50,7 +54,8 @@ pub fn find_script_input(inputs: List<Input>, script_addr: Address) -> Input {
       } else {
         find_script_input(rest, script_addr)
       }
-    [] -> error @"no script input found"
+    [] ->
+      error @"no script input found"
   }
 }
 
@@ -62,7 +67,8 @@ pub fn find_script_output(outputs: List<Output>, script_addr: Address) -> Output
       } else {
         find_script_output(rest, script_addr)
       }
-    [] -> error @"no script output found"
+    [] ->
+      error @"no script output found"
   }
 }
 
@@ -74,7 +80,8 @@ pub fn find_cont_payout(pay_address: Address, outputs: List<Output>) -> Bool {
       } else {
         find_cont_payout(pay_address, rest)
       }
-    [] -> False
+    [] ->
+      False
   }
 }
 
@@ -85,12 +92,13 @@ pub fn find_exact_payout(
 ) -> Bool {
   when outputs is {
     [output, ..rest] ->
-      if output.address == pay_address && output.value == pay_value {
+      if output.address == pay_address && (output.value == pay_value)? {
         True
       } else {
         find_exact_payout(pay_address, pay_value, rest)
       }
-    [] -> False
+    [] ->
+      False?
   }
 }
 
@@ -99,7 +107,8 @@ pub fn find_token_payout(
   pay_value: Value,
   outputs: List<Output>,
 ) -> Bool {
-  let flattened_value = value.flatten(pay_value)
+  let flattened_value =
+    value.flatten(pay_value)
   when outputs is {
     [output, ..rest] ->
       if
@@ -112,7 +121,8 @@ pub fn find_token_payout(
       } else {
         find_token_payout(pay_address, pay_value, rest)
       }
-    [] -> False
+    [] ->
+      False
   }
 }
 
@@ -127,6 +137,7 @@ fn check_all_assets(
       } else {
         False
       }
-    [] -> True
+    [] ->
+      True
   }
 }

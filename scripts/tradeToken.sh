@@ -4,12 +4,12 @@ set -e
 source ../.env
 
 # Addresses
-sender_address=$(cat wallets/buyer-wallet/payment.addr)
-receiver_address=$(cat wallets/seller-wallet/payment.addr)
-# receiver_address="addr_test1qppp0mcjel3kztftz36k0cc5j77qcz4vt0udvc3fzzz9djeq7v27xnzv5664myxhzfvgj5tlymus096u0y7xfrx9sazqpvjzrv"
+sender_address=$(cat wallets/seller-wallet/payment.addr)
+# receiver_address=$(cat wallets/seller-wallet/payment.addr)
+receiver_address="addr_test1qppp0mcjel3kztftz36k0cc5j77qcz4vt0udvc3fzzz9djeq7v27xnzv5664myxhzfvgj5tlymus096u0y7xfrx9sazqpvjzrv"
 
 # Define Asset to be printed here
-assetA="100000000000000 0ed672eef8d5d58a6fbce91327baa25636a8ff97af513e3481c97c52.5468697349734f6e6553746172746572546f6b656e466f7254657374696e6734"
+assetA="1 7d878696b149b529807aa01b8e20785e0a0d470c32c13f53f08a55e3.44455630313831"
 assetB="12345 6effa18e41008cd0b13f3959a5a4af40b92ca936bb7669f40d3b1f81.5468697349734f6e6553746172746572546f6b656e466f7254657374696e6732"
 
 min_utxo=$(${cli} transaction calculate-min-required-utxo \
@@ -63,7 +63,7 @@ echo -e "\033[1;32m Fee: \033[0m" $FEE
 #
 echo -e "\033[0;36m Signing \033[0m"
 ${cli} transaction sign \
-    --signing-key-file wallets/buyer-wallet/payment.skey \
+    --signing-key-file wallets/seller-wallet/payment.skey \
     --tx-body-file tmp/tx.draft \
     --out-file tmp/tx.signed \
     ${network}

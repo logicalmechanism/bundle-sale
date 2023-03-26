@@ -107,7 +107,6 @@ test good_remove_tx() {
       |> credential.with_delegation_key(#"")
   let addr =
     credential.from_verification_key(#"")
-      |> credential.with_delegation_key(#"")
   validators.remove_validation(
     datum_a(),
     tx_valid(script_addr, addr, addr, #""),
