@@ -1,6 +1,5 @@
 use aiken/list
 use aiken/transaction.{OutputReference, Transaction}
-use aiken/transaction/credential
 use aiken/transaction/value
 use fractional_sale/address
 use fractional_sale/datums.{Datum}
@@ -21,12 +20,7 @@ pub fn purchase_validation(
   let script_addr =
     validating_input.output.address
   let seller_addr =
-    if datum.owner.sc == #"" {
-      credential.from_verification_key(datum.owner.pkh)
-    } else {
-      credential.from_verification_key(datum.owner.pkh)
-        |> credential.with_delegation_key(datum.owner.sc)
-    }
+    address.create_address(datum.owner.pkh, datum.owner.sc)
   let cost_value =
     value.from_asset(
       datum.cost.pid,
@@ -77,15 +71,15 @@ pub fn update_validation(
   list.and(
     [
       // the owner must sign it
-      helpers.must_be_signed_by(tx, datum.owner.pkh)?,
+      helpers.must_be_signed_by(tx, datum.owner.pkh),
       // a utxo must go back to the script
-      address.find_cont_payout(script_addr, tx.outputs)?,
+      address.find_cont_payout(script_addr, tx.outputs),
       // the owner of the cont utxo must remain constant
-      datums.constant_ownership(datum, outbound_datum)?,
+      datum.owner == outbound_datum.owner,
       // single script input
-      (address.count_script_inputs(tx.inputs, script_addr, 0) == 1)?,
+      address.count_script_inputs(tx.inputs, script_addr, 0) == 1,
       // single script output
-      (address.count_script_outputs(tx.outputs, script_addr, 0) == 1)?,
+      address.count_script_outputs(tx.outputs, script_addr, 0) == 1,
     ],
   )
 }
@@ -102,22 +96,17 @@ pub fn remove_validation(
   let script_addr =
     validating_input.output.address
   let seller_addr =
-    if datum.owner.sc == #"" {
-      credential.from_verification_key(datum.owner.pkh)
-    } else {
-      credential.from_verification_key(datum.owner.pkh)
-        |> credential.with_delegation_key(datum.owner.sc)
-    }
+    address.create_address(datum.owner.pkh, datum.owner.sc)
   list.and(
     [
       // owner must sign it
-      helpers.must_be_signed_by(tx, datum.owner.pkh)?,
+      helpers.must_be_signed_by(tx, datum.owner.pkh),
       // owner must get the utxo back
-      address.find_exact_payout(seller_addr, validating_value, tx.outputs)?,
+      address.find_exact_payout(seller_addr, validating_value, tx.outputs),
       // single script input
-      (address.count_script_inputs(tx.inputs, script_addr, 0) == 1)?,
+      address.count_script_inputs(tx.inputs, script_addr, 0) == 1,
       // no script outputs
-      (address.count_script_outputs(tx.outputs, script_addr, 0) == 0)?,
+      address.count_script_outputs(tx.outputs, script_addr, 0) == 0,
     ],
   )
 }

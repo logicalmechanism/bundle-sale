@@ -141,3 +141,13 @@ fn check_all_assets(
       True
   }
 }
+
+pub fn create_address(pkh: ByteArray, sc: ByteArray) -> Address {
+  // empty bytearrays means dont add the sc to the pkh
+  if sc == #"" {
+    credential.from_verification_key(pkh)
+  } else {
+    credential.from_verification_key(pkh)
+      |> credential.with_delegation_key(sc)
+  }
+}
