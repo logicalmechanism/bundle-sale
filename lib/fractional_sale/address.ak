@@ -92,13 +92,13 @@ pub fn find_exact_payout(
 ) -> Bool {
   when outputs is {
     [output, ..rest] ->
-      if output.address == pay_address && (output.value == pay_value)? {
+      if output.address == pay_address && output.value == pay_value {
         True
       } else {
         find_exact_payout(pay_address, pay_value, rest)
       }
     [] ->
-      False?
+      False
   }
 }
 

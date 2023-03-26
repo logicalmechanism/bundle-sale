@@ -40,19 +40,19 @@ pub fn purchase_validation(
   list.and(
     [
       // single script input
-      (address.count_script_inputs(tx.inputs, script_addr, 0) == 1)?,
+      address.count_script_inputs(tx.inputs, script_addr, 0) == 1,
       // single script output
-      (address.count_script_outputs(tx.outputs, script_addr, 0) == 1)?,
+      address.count_script_outputs(tx.outputs, script_addr, 0) == 1,
       // check for valid bundle size
-      redeemers.valid_bundle_size(amount)?,
+      redeemers.valid_bundle_size(amount),
       // the continuing utxo must have a correct datum
-      datums.purchase_datum_check(datum, outbound_datum)?,
+      datums.purchase_datum_check(datum, outbound_datum),
       // the seller gets paid what they want
-      address.find_token_payout(seller_addr, cost_value, tx.outputs)?,
+      address.find_token_payout(seller_addr, cost_value, tx.outputs),
       // the leftover partial token gets send back to the script
-      address.find_exact_payout(script_addr, partial_value, tx.outputs)?,
+      address.find_exact_payout(script_addr, partial_value, tx.outputs),
       // owner can not lie
-      (value.quantity_of(validating_value, datum.bundle.pid, datum.bundle.tkn) >= amount.amt * datum.bundle.amt)?,
+      value.quantity_of(validating_value, datum.bundle.pid, datum.bundle.tkn) >= amount.amt * datum.bundle.amt,
     ],
   )
 }
