@@ -1,21 +1,11 @@
 use aiken/list
-use aiken/transaction.{Input, OutputReference, Transaction}
-use aiken/transaction/value.{Value}
+use aiken/transaction.{OutputReference, Transaction}
+use aiken/transaction/credential
+use aiken/transaction/value
 use fractional_sale/address
-use fractional_sale/data
-use fractional_sale/datums.{Datum, PublicKeyHash, TokenInfo}
+use fractional_sale/datums.{Datum}
+use fractional_sale/helpers
 use fractional_sale/redeemers.{BuyAmount}
-
-fn find_input_value(possible_input: Option<Input>) -> Value {
-  when possible_input is {
-    Some(possible_input) -> possible_input.output.value
-    None -> error @"no value on spending input"
-  }
-}
-
-fn must_be_signed_by(transaction: Transaction, vk: PublicKeyHash) {
-  list.has(transaction.extra_signatories, vk)
-}
 
 pub fn purchase_validation(
   datum: Datum,
@@ -23,26 +13,32 @@ pub fn purchase_validation(
   output_reference: OutputReference,
   amount: BuyAmount,
 ) -> Bool {
+  // used by both redeemers
   let validating_input =
-    list.find(
-      tx.inputs,
-      fn(input) { input.output_reference == output_reference },
+    helpers.get_validating_input(tx.inputs, output_reference)
+  let validating_value =
+    validating_input.output.value
+  let script_addr =
+    validating_input.output.address
+  let seller_addr =
+    credential.from_verification_key(datum.owner.pkh)
+  // |> credential.with_delegation_key(datum.owner.sc)
+  let cost_value =
+    value.from_asset(
+      datum.cost.pid,
+      datum.cost.tkn,
+      amount.amt * datum.cost.amt,
     )
-  let validating_value = find_input_value(validating_input)
-  let script_addr = address.find_input_address(validating_input)
-  let seller_addr = address.create_address(datum.owner.pkh, datum.owner.sc)
-  let pay_token =
-    TokenInfo(datum.cost.pid, datum.cost.tkn, amount.amt * datum.cost.amt)
-  let pay_value =
+  let return_value =
     value.from_asset(
       datum.bundle.pid,
       datum.bundle.tkn,
       amount.amt * datum.bundle.amt,
     )
-  let partial_value = value.add(validating_value, value.negate(pay_value))
-  let outbound_output =
-    list.find(tx.outputs, fn(output) { output.address == script_addr })
-  expect outbound_datum: Datum = data.find_outbound_datum(outbound_output)
+  let partial_value =
+    value.add(validating_value, value.negate(return_value))
+  expect outbound_datum: Datum =
+    helpers.get_outbound_datum(tx, validating_input)
   list.and(
     [
       // single script input
@@ -54,7 +50,7 @@ pub fn purchase_validation(
       // the continuing utxo must have a correct datum
       datums.purchase_datum_check(datum, outbound_datum)?,
       // the seller gets paid what they want
-      address.find_token_payout(seller_addr, pay_token, tx.outputs)?,
+      address.find_token_payout(seller_addr, cost_value, tx.outputs)?,
       // the leftover partial token gets send back to the script
       address.find_exact_payout(script_addr, partial_value, tx.outputs)?,
       // owner can not lie
@@ -69,18 +65,15 @@ pub fn update_validation(
   output_reference: OutputReference,
 ) -> Bool {
   let validating_input =
-    list.find(
-      tx.inputs,
-      fn(input) { input.output_reference == output_reference },
-    )
-  let script_addr = address.find_input_address(validating_input)
-  let outbound_output =
-    list.find(tx.outputs, fn(output) { output.address == script_addr })
-  expect outbound_datum: Datum = data.find_outbound_datum(outbound_output)
+    helpers.get_validating_input(tx.inputs, output_reference)
+  let script_addr =
+    validating_input.output.address
+  expect outbound_datum: Datum =
+    helpers.get_outbound_datum(tx, validating_input)
   list.and(
     [
       // the owner must sign it
-      must_be_signed_by(tx, datum.owner.pkh)?,
+      helpers.must_be_signed_by(tx, datum.owner.pkh)?,
       // a utxo must go back to the script
       address.find_cont_payout(script_addr, tx.outputs)?,
       // the owner of the cont utxo must remain constant
@@ -99,17 +92,18 @@ pub fn remove_validation(
   output_reference: OutputReference,
 ) -> Bool {
   let validating_input =
-    list.find(
-      tx.inputs,
-      fn(input) { input.output_reference == output_reference },
-    )
-  let validating_value = find_input_value(validating_input)
-  let script_addr = address.find_input_address(validating_input)
-  let seller_addr = address.create_address(datum.owner.pkh, datum.owner.sc)
+    helpers.get_validating_input(tx.inputs, output_reference)
+  let validating_value =
+    validating_input.output.value
+  let script_addr =
+    validating_input.output.address
+  let seller_addr =
+    credential.from_verification_key(datum.owner.pkh)
+  // |> credential.with_delegation_key(datum.owner.sc)
   list.and(
     [
       // owner must sign it
-      must_be_signed_by(tx, datum.owner.pkh)?,
+      helpers.must_be_signed_by(tx, datum.owner.pkh)?,
       // owner must get the utxo back
       address.find_exact_payout(seller_addr, validating_value, tx.outputs)?,
       // single script input

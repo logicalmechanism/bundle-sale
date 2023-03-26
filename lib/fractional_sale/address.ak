@@ -1,10 +1,6 @@
-use aiken/list
 use aiken/transaction.{Input, Output}
-use aiken/transaction/credential.{
-  Address, Inline, StakeCredential, VerificationKeyCredential,
-}
-use aiken/transaction/value.{Value}
-use fractional_sale/datums.{PublicKeyHash, TokenInfo}
+use aiken/transaction/credential.{Address}
+use aiken/transaction/value.{AssetName, PolicyId, Value}
 
 pub fn count_script_inputs(
   inputs: List<Input>,
@@ -46,8 +42,40 @@ pub fn find_input_address(possible_input: Option<Input>) -> Address {
   }
 }
 
+pub fn find_script_input(inputs: List<Input>, script_addr: Address) -> Input {
+  when inputs is {
+    [input, ..rest] ->
+      if input.output.address == script_addr {
+        input
+      } else {
+        find_script_input(rest, script_addr)
+      }
+    [] -> error @"no script input found"
+  }
+}
+
+pub fn find_script_output(outputs: List<Output>, script_addr: Address) -> Output {
+  when outputs is {
+    [output, ..rest] ->
+      if output.address == script_addr {
+        output
+      } else {
+        find_script_output(rest, script_addr)
+      }
+    [] -> error @"no script output found"
+  }
+}
+
 pub fn find_cont_payout(pay_address: Address, outputs: List<Output>) -> Bool {
-  list.any(outputs, fn(output) { output.address == pay_address })
+  when outputs is {
+    [output, ..rest] ->
+      if output.address == pay_address {
+        True
+      } else {
+        find_cont_payout(pay_address, rest)
+      }
+    [] -> False
+  }
 }
 
 pub fn find_exact_payout(
@@ -55,52 +83,50 @@ pub fn find_exact_payout(
   pay_value: Value,
   outputs: List<Output>,
 ) -> Bool {
-  list.any(
-    outputs,
-    fn(output) {
-      list.and([(output.address == pay_address)?, (output.value == pay_value)?])
-    },
-  )
+  when outputs is {
+    [output, ..rest] ->
+      if output.address == pay_address && output.value == pay_value {
+        True
+      } else {
+        find_exact_payout(pay_address, pay_value, rest)
+      }
+    [] -> False
+  }
 }
 
 pub fn find_token_payout(
   pay_address: Address,
-  pay_value: TokenInfo,
+  pay_value: Value,
   outputs: List<Output>,
 ) -> Bool {
-  list.any(
-    outputs,
-    fn(output) {
-      list.and(
-        [
-          output.address == pay_address,
-          value.quantity_of(output.value, pay_value.pid, pay_value.tkn) >= pay_value.amt,
-        ],
-      )
-    },
-  )
-}
-
-pub fn create_address(
-  key_hash: PublicKeyHash,
-  stake_credential: PublicKeyHash,
-) -> Address {
-  if stake_credential == #"" {
-    payment_address(key_hash, None)
-  } else {
-    payment_address(
-      key_hash,
-      Some(Inline(VerificationKeyCredential(stake_credential))),
-    )
+  let flattened_value = value.flatten(pay_value)
+  when outputs is {
+    [output, ..rest] ->
+      if
+      output.address == pay_address && check_all_assets(
+        output.value,
+        flattened_value,
+      ) == True{
+      
+        True
+      } else {
+        find_token_payout(pay_address, pay_value, rest)
+      }
+    [] -> False
   }
 }
 
-fn payment_address(
-  key_hash: PublicKeyHash,
-  with_stake_credential: Option<StakeCredential>,
-) {
-  Address {
-    payment_credential: VerificationKeyCredential(key_hash),
-    stake_credential: with_stake_credential,
+fn check_all_assets(
+  out_value: Value,
+  flattened_value: List<(PolicyId, AssetName, Int)>,
+) -> Bool {
+  when flattened_value is {
+    [(policy, token_name, quantity), ..rest] ->
+      if value.quantity_of(out_value, policy, token_name) >= quantity {
+        check_all_assets(out_value, rest)
+      } else {
+        False
+      }
+    [] -> True
   }
 }

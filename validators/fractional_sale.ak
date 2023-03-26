@@ -3,8 +3,8 @@ use fractional_sale/datums.{Datum}
 use fractional_sale/redeemers.{Purchase, Redeemer, Remove, Update}
 use fractional_sale/validators
 
-validator fractional_sale {
-  fn(datum: Datum, redeemer: Redeemer, context: ScriptContext) -> Bool {
+validator {
+  fn fractional_sale(datum: Datum, redeemer: Redeemer, context: ScriptContext) -> Bool {
     when context.purpose is {
       Spend(output_reference) ->
         when redeemer is {
